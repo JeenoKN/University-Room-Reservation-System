@@ -1,0 +1,173 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:roombooking/screens/home_screen.dart';
+import 'package:roombooking/student/stdhistory_page.dart';
+import 'package:roombooking/student/stdroomlist.dart';
+import 'package:roombooking/student/stdstatus_page.dart';
+import 'package:roombooking/student/widgets/student_navbar.dart';
+
+class StudentHome extends StatefulWidget {
+  final int initialIndex;
+  const StudentHome({super.key, this.initialIndex = 0});
+
+  @override
+  State<StudentHome> createState() => StudentHomeState();
+}
+
+class StudentHomeState extends State<StudentHome> {
+  late int _selectedIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialIndex;
+  }
+
+  final List<Widget> _pages = [
+    const StudentHomePage(),
+    const Stdroomlist(), // browse room list page
+    const StdstatusPage(), // status page
+    const StdhistoryPage(), // history page
+  ];
+
+  void changeTab(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _pages[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: const Color(0xFF600000),
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white70,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.meeting_room),
+            label: 'Rooms',
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.layers), label: 'Status'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history_edu),
+            label: 'History',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class StudentHomePage extends StatelessWidget {
+  const StudentHomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const StudentNavbar(
+              leadingText: 'Welcome !',
+              showBack: false,
+            ),
+            const SizedBox(height: 30),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                'Rule for using Room Reservation\n\n'
+                '• Students can book only for today.\n'
+                '• Each student can book only one time slot per day.\n'
+                '• Past time slots are not available for booking.',
+                style: GoogleFonts.alice(
+                  color: Colors.white,
+                  fontSize: 17,
+                  height: 1.6,
+                ),
+              ),
+            ),
+            const SizedBox(height: 40),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildRoomBox('images/roomA101.jpg'),
+                _buildRoomBox('images/roomC103.jpg'),
+              ],
+            ),
+            const SizedBox(height: 50),
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    "Let make a \nReservation",
+                    style: GoogleFonts.alice(color: Colors.white, fontSize: 25),
+                  ),
+                  const SizedBox(width: 12),
+                  ElevatedButton(
+                    onPressed: () {
+                      final home = context.findAncestorStateOfType<StudentHomeState>();
+                      if (home != null) {
+                        home.changeTab(1); // Rooms tab
+                      } else {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const StudentHome(initialIndex: 1),
+                          ),
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      shape: const StadiumBorder(),
+                      backgroundColor: Colors.white,
+                    ),
+                    child: const Icon(
+                      Icons.arrow_forward_outlined,
+                      color: Colors.grey,
+                      size: 25,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRoomBox(String imagePath) {
+    return Container(
+      width: 150,
+      height: 200,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        color: Colors.white,
+        image: DecorationImage(
+          image: AssetImage(imagePath), // ดึงรูปจาก assets
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
+}

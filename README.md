@@ -112,7 +112,6 @@ DB_USER=root
 DB_PASSWORD=your_password
 DB_NAME=room_booking
 DB_PORT=3306
-SESSION_SECRET=your_session_secret
 ```
 
 Do not commit your real `.env` file to GitHub.

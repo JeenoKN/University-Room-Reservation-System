@@ -137,5 +137,5 @@ Bachelor of Engineering in Computer Engineering
 
 ## Author
 
-**Theeramonrapat Vichaisri**  
+**Treemonrapat Vichaisri**  
 Computer Engineering Student
